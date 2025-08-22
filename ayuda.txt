@@ -1,0 +1,10 @@
+
+
+
+----------------------- VER VERSIONES
+dotnet --list-sdks
+
+----------------------- VER MODELOS PROYECTOS
+
+dotnet new web -n MinimalAPIPeliculas
+
