@@ -1,10 +1,16 @@
 
 
+---------------------------sec 2--------------------------
 
------------------------ VER VERSIONES
+ VER VERSIONES
 dotnet --list-sdks
 
------------------------ VER MODELOS PROYECTOS
+ VER MODELOS PROYECTOS
 
 dotnet new web -n MinimalAPIPeliculas
+
+---------------------------sec 3----------------------------------
+
+dotnet add package Swashbuckle.AspNetCore
+
 
