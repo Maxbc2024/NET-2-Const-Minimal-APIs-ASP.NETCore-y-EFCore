@@ -1,6 +1,12 @@
+
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Builder;
 using MinimalAPIPeliculas.Entidades;
 using Microsoft.AspNetCore.Cors;
+using MinimalAPIPeliculas;
+using MinimalAPIPeliculas.Repositorios;
+using Microsoft.AspNetCore.OutputCaching;
+using MinimalAPIPeliculas.Endpoints;
 // using Microsoft.AspNetCore.Builder; // no se ponet porque usa >> < ImplicitUsings > enable </ ImplicitUsings >
 
 
@@ -13,6 +19,17 @@ var apellido = builder.Configuration.GetValue<string>("apellido");
 
 //******************** Inicio de �rea de los servicios ***********************
 var origenesPermitidos = builder.Configuration.GetValue<string>("origenespermitidos")!;
+
+
+
+//*************************BD SQLLITE*********************************************
+builder.Services.AddDbContext<ApplicationDbContext>(opt =>
+{
+    opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
+//**********************************************************************
+
+
 
 // habilitar cors
 builder.Services.AddCors(opciones =>
@@ -35,8 +52,12 @@ builder.Services.AddOutputCache();
 // --------middleware para swagger(explora nuestros endpoints)
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-// -----------------------
+// ----------------------- MIS SERVICIOS
 
+builder.Services.AddScoped<IRepositorioGeneros, RepositorioGeneros>();
+
+// automapper
+builder.Services.AddAutoMapper(typeof(Program));
 
 //******************* Fin de �rea de los servicios ***********************
 var app = builder.Build();
@@ -63,33 +84,26 @@ if (builder.Environment.IsDevelopment())
 app.MapGet("/", [EnableCors(policyName: "libre")] () => "�Hola, mundo!");
 
 
-//http://localhost:5011/generos
-app.MapGet("/generos", () =>
-{
-    var generos = new List<Genero>
-    {
-        new Genero
-        {
-            Id = 1,
-            Nombre = "Drama"
-        },
-         new Genero
-        {
-            Id = 2,
-            Nombre = "Acci�n"
-        },
-          new Genero
-        {
-            Id = 3,
-            Nombre = "Comedia"
-        },
-    };
-
-    return generos;
-})// agregar cacheo a esta ruta
-.CacheOutput(c => c.Expire(TimeSpan.FromSeconds(15)));
 
 
+// //http://localhost:5011/generos
+// app.MapGet("/generos", async (IRepositorioGeneros repositorio) =>
+// {
+//     return await repositorio.ObtenerTodos();
+// })// agregar cacheo a esta ruta
+// .CacheOutput(c => c.Expire(TimeSpan.FromSeconds(60))
+// .Tag("generos-get")); //Tag > es un nombre del cache > para llamarlo de otro lado
+
+// app.MapPost("/generos", async (Genero genero, IRepositorioGeneros repositorio,IOutputCacheStore outputCacheStore) =>
+// {
+//     var id = await repositorio.Crear(genero);
+//     await outputCacheStore.EvictByTagAsync("generos-get", default);// limpia el cache "generos-get"
+//     return Results.Created($"/generos/{id}", genero);
+// });
+
+
+
+app.MapGroup("/generos").MapGeneros();
 
 //*************** Fin de �rea de los middleware
 

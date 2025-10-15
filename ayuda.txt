@@ -1,6 +1,7 @@
 
+https://github.com/gavilanch/MinimalApisMoviesEFCore
 
----------------------------sec 2--------------------------
+************************************ sec 2************************************
 
  VER VERSIONES
 dotnet --list-sdks
@@ -9,8 +10,52 @@ dotnet --list-sdks
 
 dotnet new web -n MinimalAPIPeliculas
 
----------------------------sec 3----------------------------------
+************************************ sec 3 ************************************
 
 dotnet add package Swashbuckle.AspNetCore
+
+//net cli
+https://learn.microsoft.com/es-es/ef/core/cli/dotnet
+
+dotnet tool install --global dotnet-ef
+
+dotnet ef
+
+---NOTA:SQLSERVER
+VAMOS INSTALAR SQLITE
+
+Microsoft.EntityFrameworkCore.Sqlite
+
+
+// crea migracion
+https://learn.microsoft.com/es-es/ef/core/managing-schemas/migrations/managing?tabs=dotnet-core-cli
+
+dotnet ef migrations add InitialCreate --output-dir Your/Directory
+
+
+// ----- crear y eliminar migraciones 
+dotnet ef migrations add InitialCreate 
+
+dotnet ef migrations remove
+
+dotnet ef migrations list
+
+// ----- crear y actulizar bd
+
+dotnet ef database update
+
+dotnet ef database drop
+
+// ejecutar
+dotnet run 
+
+http://localhost:5011/swagger/index.html
+
+//
+AutoMapper
+
+
+************************************ sec 4 ************************************
+
 
 
